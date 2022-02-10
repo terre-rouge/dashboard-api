@@ -1,9 +1,18 @@
 import express from 'express'
+
 import algolia from './algolia'
 import shopify from './shopify'
 import vercel from './vercel'
+import jwtCheck from './jwt-checker'
 
 const app = express()
+
+app.use(jwtCheck)
+
+app.get('/status', async (req, res) => {
+  res.send('Online')
+  res.end()
+})
 
 // Deploy website
 app.get('/deploy', async (req, res) => {
@@ -31,6 +40,19 @@ app.get('/deploy', async (req, res) => {
   res.end()
 })
 
-app.listen(5000, () => {
-  console.log('App is listening on port 5000')
+const server = app.listen(6000, () => {
+  console.log('App is listening on port 6000')
 })
+
+process.on('SIGTERM', shutDown)
+process.on('SIGINT', shutDown)
+
+function shutDown() {
+  server.close(() => {
+    process.exit(0)
+  })
+
+  setTimeout(() => {
+    process.exit(1)
+  }, 10000)
+}
