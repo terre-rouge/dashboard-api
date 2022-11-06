@@ -20,7 +20,7 @@ const convertToRecords = (products: any) =>
       handle: product.handle,
       price: product.priceRange.minVariantPrice.amount / 100, // Bug: API send in centimes
       currency: product.priceRange.minVariantPrice.currencyCode,
-      image: product.images.edges[0].node.transformedSrc,
+      image: product.images.edges[0]?.node?.transformedSrc,
     }
   })
 

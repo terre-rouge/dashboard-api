@@ -34,6 +34,7 @@ app.get('/deploy', async (req, res) => {
 
     res.send(response)
   } catch (error) {
+    console.log('error', error)
     res.status(500)
     res.send(error.message)
   }
