@@ -1,4 +1,5 @@
 import express from 'express'
+import bodyParser from 'body-parser'
 
 import algolia from './algolia'
 import shopify from './shopify'
@@ -8,6 +9,8 @@ import jwtCheck from './jwt-checker'
 const app = express()
 
 app.use(jwtCheck)
+app.use(bodyParser.json({ limit: '200mb' }))
+app.use(bodyParser.urlencoded({ limit: '200mb', extended: true }))
 
 app.get('/status', async (req, res) => {
   res.send('Online')
@@ -31,7 +34,7 @@ app.get('/export-shopify-products', async (req, res) => {
 })
 
 // 2. Export them into Algolia
-app.get('/import-algolia-products', async (req, res) => {
+app.post('/import-algolia-products', async (req, res) => {
   try {
     const products = req.body.products
     console.log('[ALGOLIA] Importing products...')
